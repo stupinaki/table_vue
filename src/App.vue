@@ -1,26 +1,122 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <FilterInputs
+        :columns="columns"
+        @submit="handleSubmit"
+    />
+    <Table
+        :columns="columns"
+        :rows="rows"
+        :filters="filters"
+    />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Table from './components/Table.vue';
+import FilterInputs from "./components/FilterInputs";
+import {EFilters} from "./constants/filterOptions";
 
 export default {
   name: 'App',
+  //аналогично стейту
+  data() {
+    // todo add id to rows
+    return {
+      columns: [
+          {
+            title: "Дата",
+            key: 'date',
+            sorted: false,
+            filterBy: [
+              EFilters.equals,
+              EFilters.more,
+              EFilters.more
+            ]
+          },
+          {
+            title: "Название",
+            key: 'name',
+            sorted: true,
+            sort(a, b) {
+              return a.name.localeCompare(b.name);
+            },
+            filterBy: [
+              EFilters.equals,
+              EFilters.contains,
+            ]
+            },
+          {
+            title: "Количество",
+            key: 'count',
+            sorted: true,
+            filterBy: [
+              EFilters.equals,
+              EFilters.more,
+              EFilters.less,
+            ]
+          },
+          {
+            title: "Расстояние",
+            key: 'distance',
+            sorted: true,
+            filterBy: [
+              EFilters.equals,
+              EFilters.more,
+              EFilters.less,
+            ]
+          },
+      ],
+      rows: [
+        {
+          date: '2020-01-02',
+          name: 'Название 1',
+          count: 23,
+          distance: 20,
+        },
+        {
+          date: '2020-02-01',
+          name: 'Название 3',
+          count: 24,
+          distance: 2030,
+        },
+        {
+          date: '2019-01-01',
+          name: 'Название 2',
+          count: 22,
+          distance: 2003,
+        },
+        {
+          date: '2020-01-01',
+          name: 'aaaa 1',
+          count: 25,
+          distance: 3,
+        },
+      ],
+      filters: null,
+    }
+  },
   components: {
-    HelloWorld
+    Table,
+    FilterInputs,
+  },
+  methods: {
+    handleSubmit(filters){
+      this.$data.filters = filters;
+      console.log({filters})
+    }
+  },
+  computed: {
+
   }
 }
 </script>
 
 <style>
+@import '~bootstrap/dist/css/bootstrap.css';
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
