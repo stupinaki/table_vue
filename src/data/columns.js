@@ -8,8 +8,7 @@ export const columns =  [
         sorted: false,
         filterBy: [
             EFilters.equals,
-            EFilters.more,
-            EFilters.less,
+            EFilters.contains,
         ]
     },
     {

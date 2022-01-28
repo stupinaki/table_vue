@@ -14,15 +14,15 @@ export const FILTER_OPTIONS = [
 
 export const FILTER_SYMBOLS = {
     equals: function (inputData, data){
-        return +inputData === data;
+        return inputData.toLowerCase() === data.toLowerCase();
     },
     contains: function (inputData, data){
-        return data.includes(inputData);
+        return data.toLowerCase().includes(inputData.toLowerCase());
     },
     less: function (inputData, data){
-        return data < +inputData;
+        return data < inputData;
     },
     more: function (inputData, data){
-        return data > +inputData;
+        return data > inputData;
     },
 }

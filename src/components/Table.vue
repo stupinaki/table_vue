@@ -19,7 +19,6 @@
 
     </table>
 
-    <p>{{filteredRows}}</p>
   </div>
 </template>
 
@@ -49,7 +48,6 @@ export default {
   methods: {
     handleFilteredRows(filterParams){
       this.$data.filterParams = filterParams;
-      console.log({filterParams})
     },
     handleSortRows(column) {
       const {sortParams} = this.$data;
@@ -69,13 +67,14 @@ export default {
 
   computed: {
     filteredRows() {
-      const unfilteredRows = this.$props.rows;
-      if(!this.$data.filterParams){
-        return unfilteredRows;
-      }
-      const {filterColumnTitle, filterParameter, inputData} = this.$data.filterParams;
+      const rows = this.$props.rows;
+      const filters = this.$data.filterParams;
 
-      return unfilteredRows.slice().filter(row => {
+      if(!filters){
+        return rows;
+      }
+      const {filterColumnTitle, filterParameter, inputData} = filters;
+      return rows.slice().filter(row => {
         const symbolFn = FILTER_SYMBOLS[filterParameter];
         const data = row[filterColumnTitle];
         return symbolFn(inputData, data)
@@ -91,7 +90,7 @@ export default {
     },
     sortedRows() {
       const {sortParams} = this.$data;
-      const {rows} = this.$props;
+      const rows = this.filteredRows;
       if (!sortParams){
         return rows;
       }
@@ -111,6 +110,9 @@ export default {
 </script>
 
 <style>
+table {
+  font-size: 1.25rem;
+}
 th, td {
   padding: 8px;
 }

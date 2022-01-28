@@ -54,7 +54,7 @@ export default {
       filterColumnTitle: null,
       inputData: null,
       FILTER_OPTIONS,
-      onInput: debounce(this.onSubmit, 3000),
+      onInput: debounce(this.onSubmit, 2000),
     }
   },
   computed: {
