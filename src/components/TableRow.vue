@@ -13,7 +13,6 @@
 <script>
 export default {
   name: 'TableRow',
-  components: {},
   props: {
     row: Object,
     columns: Array,

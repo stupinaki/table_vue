@@ -1,42 +1,58 @@
 <template>
-  <table class="table table-bordered">
-    <TableHeader
+  <div>
+    <FilterInputs
         :columns="columns"
-        @sort="handleSortRows"
+        @submit="handleFilteredRows"
     />
-    <TableRow
-        v-for="row in sortedRows"
-        :key="row.id"
-        :columns="columns"
-        :row="row"
-    />
-  </table>
+
+    <table class="table table-bordered">
+      <TableHeader
+          :columns="columns"
+          @sort="handleSortRows"
+      />
+      <TableRow
+          v-for="row in sortedRows"
+          :key="row.id"
+          :columns="columns"
+          :row="row"
+      />
+
+    </table>
+
+    <p>{{filteredRows}}</p>
+  </div>
 </template>
 
 <script>
 import TableRow from "./TableRow";
 import TableHeader from "./TableHeader";
+import FilterInputs from "./FilterInputs";
+import {FILTER_SYMBOLS} from "../constants/filterOptions";
 
 export default {
   name: 'Table',
   components: {
     TableRow,
     TableHeader,
+    FilterInputs,
   },
   data() {
     return {
       sortParams: null,
+      filterParams: undefined,
     }
   },
   props: {
     columns: Array,
     rows: Array,
-    filters: Object,
   },
   methods: {
+    handleFilteredRows(filterParams){
+      this.$data.filterParams = filterParams;
+      console.log({filterParams})
+    },
     handleSortRows(column) {
       const {sortParams} = this.$data;
-
       if(sortParams?.key === column.key){
         this.$data.sortParams = {
           ...sortParams,
@@ -49,9 +65,22 @@ export default {
         desc: true,
       }
     },
-
   },
+
   computed: {
+    filteredRows() {
+      const unfilteredRows = this.$props.rows;
+      if(!this.$data.filterParams){
+        return unfilteredRows;
+      }
+      const {filterColumnTitle, filterParameter, inputData} = this.$data.filterParams;
+
+      return unfilteredRows.slice().filter(row => {
+        const symbolFn = FILTER_SYMBOLS[filterParameter];
+        const data = row[filterColumnTitle];
+        return symbolFn(inputData, data)
+      });
+    },
     targetSortColumn() {
       const {sortParams} = this.$data;
       const {columns} = this.$props;
@@ -77,12 +106,6 @@ export default {
             : b[sortParams.key] - a[sortParams.key];
       })
     },
-    // filtredRows() {
-    //   const unfilteredRows = this.$props.rows;
-    //   const {filterColumnTitle, filterParameter, inputData} = this.$props.filters;
-    //   const filteredRows = unfilteredRows.filter(row => row[filterColumnTitle] === inputData);
-    //
-    // }
   }
 }
 </script>

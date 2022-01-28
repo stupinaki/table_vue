@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style>
-.pointed {
+th {
   cursor: pointer;
 }
 </style>

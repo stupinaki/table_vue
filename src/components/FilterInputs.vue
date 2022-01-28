@@ -54,16 +54,14 @@ export default {
       filterColumnTitle: null,
       inputData: null,
       FILTER_OPTIONS,
-      onInput: debounce(this.onSubmit, 1000),
+      onInput: debounce(this.onSubmit, 3000),
     }
   },
   computed: {
     filterOptions() {
       const {filterColumnTitle} = this.$data;
       if (filterColumnTitle) {
-        const targetColumn = this.$props.columns.find(column => column.key == filterColumnTitle);
-        console.log('targetColumn', targetColumn, filterColumnTitle)
-
+        const targetColumn = this.$props.columns.find(column => column.key === filterColumnTitle);
         return [
           EMPTY_OPTION,
           ...FILTER_OPTIONS.filter(option => targetColumn.filterBy.includes(option.value))
@@ -72,9 +70,9 @@ export default {
       return [
         EMPTY_OPTION,
         ...FILTER_OPTIONS
-      ]
-
+      ];
     },
+
     filterColumns() {
       return [
         EMPTY_OPTION,
